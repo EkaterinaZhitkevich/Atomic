@@ -11,36 +11,33 @@ public class Main {
     public static AtomicInteger amount4 = new AtomicInteger();
     public static AtomicInteger amount5 = new AtomicInteger();
 
-    public static void main(String[] args) throws InterruptedException{
+    public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
         String[] texts = new String[niknameAmount];
         for (int i = 0; i < texts.length; i++) {
             texts[i] = generateText(letters, length + random.nextInt(3));
 //            System.out.println(texts[i]);
         }
-       Thread thread1 =  new Thread(() -> {
+        Thread thread1 = new Thread(() -> {
             for (String text : texts) {
-                if (text.length() == 3) {
-                    countCoolNickNames(text, amount3);
-
+                if (isPalindrome(text)) {
+                    countWordsWithTextLength(text);
                 }
             }
 //           System.out.println(amount3);
         });
         Thread thread2 = new Thread(() -> {
             for (String text : texts) {
-                if (text.length() == 4) {
-                    countCoolNickNames(text, amount4);
-
+                if (isWordContainOneLetter(text)) {
+                    countWordsWithTextLength(text);
                 }
             }
 //            System.out.println(amount4);
         });
         Thread thread3 = new Thread(() -> {
             for (String text : texts) {
-                if (text.length() == 5) {
-                    countCoolNickNames(text, amount5);
-
+                if (isWordConsistsOfSortedLetters(text)) {
+                    countWordsWithTextLength(text);
                 }
             }
 //            System.out.println(amount5);
@@ -49,15 +46,15 @@ public class Main {
         threads.add(thread1);
         threads.add(thread2);
         threads.add(thread3);
-        for (Thread thread:threads) {
-           thread.start();
+        for (Thread thread : threads) {
+            thread.start();
         }
-        for (Thread thread:threads) {
+        for (Thread thread : threads) {
             thread.join();
         }
-        System.out.println("Красивых слов с длиной 3: " + amount3+ " шт");
-        System.out.println("Красивых слов с длиной 4: " + amount4+ " шт");
-        System.out.println("Красивых слов с длиной 5: " + amount5+ " шт");
+        System.out.println("Красивых слов с длиной 3: " + amount3 + " шт");
+        System.out.println("Красивых слов с длиной 4: " + amount4 + " шт");
+        System.out.println("Красивых слов с длиной 5: " + amount5 + " шт");
 
     }
 
@@ -101,15 +98,13 @@ public class Main {
         return true;
     }
 
-    public static void countCoolNickNames(String word, AtomicInteger atomicInteger) {
-        if (isPalindrome(word)) {
-            atomicInteger.incrementAndGet();
-        }
-        if (isWordConsistsOfSortedLetters(word)) {
-            atomicInteger.incrementAndGet();
-        }
-        if (isWordContainOneLetter(word)) {
-            atomicInteger.incrementAndGet();
+    public static void countWordsWithTextLength(String word) {
+        if (word.length() == 3) {
+            amount3.incrementAndGet();
+        } else if (word.length() == 4) {
+            amount4.incrementAndGet();
+        } else if (word.length() == 5) {
+            amount5.incrementAndGet();
         }
     }
 
